@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from '@emotion/styled';
+import Frase from './components/Frase';
 
 const Contenedor = styled.div`
   display: flex;
@@ -26,8 +27,32 @@ const Boton = styled.button`
 
 
 function App() {
+
+  //State de frases
+  const [frase, guardarFrase] = useState({});
+
+  const consultarAPI = async () =>{
+    const api = await fetch('http://breaking-bad-quotes.herokuapp.com/v1/quotes');
+    const frase = await api.json()
+    guardarFrase(frase[0])
+  }
+
+  //Cargar una frase 
+  useEffect(() => {
+    consultarAPI()
+  }, []);
+
   return (
-    <h1>Breaking bad</h1>
+    <Contenedor>
+      <Frase 
+        frase={frase}
+      />
+      <Boton
+        onClick={consultarAPI}
+      >
+        Obtener Frase
+      </Boton>
+    </Contenedor>
   );
 }
 
